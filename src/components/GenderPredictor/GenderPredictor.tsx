@@ -20,10 +20,10 @@ export const GenderPredictor = () => {
 
   function validate(name: string): boolean {
     if (name.length < 3) {
-      setNameErrorMessage("Name should be at least 3 symbols long!");
+      setNameErrorMessage("Имя должно состоять минимум из 3х символов!");
       return false;
     } else if (!pattern.test(name)) {
-      setNameErrorMessage("Name should consist of letters only!");
+      setNameErrorMessage("В имени должны быть только буквы!");
       return false;
     }
     setNameErrorMessage("");
@@ -42,10 +42,10 @@ export const GenderPredictor = () => {
         `https://api.genderapi.io/api/?name=${name}`
       );
       if (!response.ok) {
-        throw new Error("API request error!");
+        throw new Error("Ошибка запроса к API!");
       }
       if (response.status === 429) {
-        throw Error("Too many requests, please wait!");
+        throw Error("Слишком много запросов, необходимо подождать!");
       }
 
       const data = await response.json();
@@ -59,27 +59,34 @@ export const GenderPredictor = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Gender Predictor</h2>
+      <h2>Предсказание пола по имени</h2>
       <input
         className={styles.inp}
         type="text"
-        placeholder="Enter your name"
+        placeholder="Введите имя"
         value={name}
         onChange={(event) => setName(event.target.value)}
       />
       <button type="button" onClick={() => checkGender(name)}>
-        Check gender
+        Проверить пол
       </button>
       <p style={{ color: "red" }}>{nameErrorMessage}</p>
       <p style={{ color: "red" }}>{errorMessage}</p>
       <section>
         {genderInfo && (
           <div>
-            <p>Your name: {genderInfo?.name}</p>
-            <p>Gender: {genderInfo?.gender}</p>
-            <p>Country: {genderInfo?.country}</p>
-            <p>Probability: {genderInfo?.probability}</p>
-            <p>Remaining credits: {genderInfo?.remainingCredits}</p>
+            <p>Имя: {genderInfo.name}</p>
+            <p>
+              Пол:
+              {genderInfo.gender === "male"
+                ? "мужской"
+                : genderInfo.gender === "female"
+                ? "женский"
+                : "неизвестно"}
+            </p>
+            <p>Страна: {genderInfo?.country}</p>
+            <p>Вероятность: {genderInfo?.probability}</p>
+            <p>Остаток запросов: {genderInfo?.remainingCredits}</p>
           </div>
         )}
       </section>
